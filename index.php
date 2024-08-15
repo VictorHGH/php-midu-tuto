@@ -1,17 +1,12 @@
 <?php
 const API_URL = "https://whenisthenextmcufilm.com/api";
-const API_URL2 = "https://open-weather13.p.rapidapi.com/city/landon/EN";
-# Inicializar una nueva sesión de cURL; ch = CURL handle
-$ch = curl_init(API_URL);
-// Indica que queremos recibir el resultado de la petición y no mostrarla en la pantalla:
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-/*
-Ejecutar la petición y guardamos
-el resultado
-*/
-$result = curl_exec($ch);
+
+# Manera mas corta de hacer la peticion si se esta seguro de que
+# la respuesta sera un JSON
+
+$result = file_get_contents(API_URL);
+
 $data = json_decode($result, true);
-curl_close($ch);
 
 ?>
 
@@ -70,6 +65,15 @@ curl_close($ch);
 		img {
 			border-radius: 10px;
 			box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+		}
+
+		h1 {
+			text-align: center;
+			font-size: clamp(1rem, 5vw, 1.5rem);
+		}
+
+		h2 {
+			font-size: clamp(.8rem, 5vw, 1.2rem);
 		}
 	</style>
 
