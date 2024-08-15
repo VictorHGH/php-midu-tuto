@@ -1,12 +1,32 @@
 <?php
+
+declare(strict_types=1);
+
 const API_URL = "https://whenisthenextmcufilm.com/api";
 
-# Manera mas corta de hacer la peticion si se esta seguro de que
-# la respuesta sera un JSON
+function get_data(string $url): array
+{
+	$result = file_get_contents($url);
+	$data = json_decode($result, true);
+	return $data;
+}
 
-$result = file_get_contents(API_URL);
+function get_until_message(int $days, string $title): string
+{
+	$days = match (true) {
+		$days === 0 => "¡$title se estrena hoy!",
+		$days === 1 => "¡$title se estrena mañana!",
+		$days <= 7 => "¡$title se estrena esta semana!",
+		$days <= 30 => "¡$title se estrena este mes!",
+		default => "¡$title estrena en $days días!",
+	};
 
-$data = json_decode($result, true);
+	return $days;
+}
+
+$data = get_data(API_URL);
+
+$until_message = get_until_message($data["days_until"], $data["title"]);
 
 ?>
 
@@ -32,7 +52,7 @@ $data = json_decode($result, true);
 		</section>
 
 		<hgroup>
-			<h2><?= $data["title"] ?> se estrena en <?= $data["days_until"] ?> días.</h2>
+			<h2><?= $until_message ?></h2>
 			<p>Fecha de estreno: <?= $data["release_date"] ?></p>
 			<p>Tipo: <?= $data["type"] ?></p>
 			<br />
